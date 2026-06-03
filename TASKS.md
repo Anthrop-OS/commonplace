@@ -16,8 +16,11 @@ Everything below builds toward this. Substrates other than Melvor are deferred.
 
 ### T1 · bridge interface — `cloud`
 - **Scope:** `harness/bridge/` — substrate-agnostic `Perception` / `Action` / `Bridge(observe, act)`.
-- **Out of scope:** any game specifics.
-- **Acceptance:** types + abstract interface compile; no game logic; a `NullBridge` stub passes a smoke test.
+  Language + shape fixed by `decisions/adr-0006-*` (polyglot): TS types bound to a canonical
+  JSON Schema in `harness/bridge/schema/`. See `harness/bridge/README.md`.
+- **Out of scope:** any game specifics; the IPC transport (T5).
+- **Acceptance:** types compile (`tsc --noEmit`); no game logic; a `NullBridge` stub passes a smoke
+  test that validates `observe()` against the canonical schema.
 - **Depends on:** —
 
 ### T2 · Melvor adapter — `cloud`
