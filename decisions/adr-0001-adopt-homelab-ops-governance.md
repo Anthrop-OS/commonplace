@@ -1,15 +1,15 @@
 ---
-id: pending
+id: 0001
 uuid: 48da3cf2
 title: Adopt homelab-ops governance patterns
 date: 2026-06-03
 status: accepted
 ---
 
-# ADR-XXXX — Adopt homelab-ops governance patterns
+# ADR-0001 — Adopt homelab-ops governance patterns
 
 > uuid `48da3cf2` (stable alias; authored as
-> `adr-pending-48da3cf2-adopt-homelab-ops-governance`, numbered on merge).
+> `adr-0001-adopt-homelab-ops-governance`, numbered on merge).
 > Output of a decision acked by the operator (cyber-ayi), 2026-06-03.
 
 ## Decision
