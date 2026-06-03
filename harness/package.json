@@ -7,7 +7,9 @@
   "license": "AGPL-3.0-only",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test bridge/*.test.ts"
+    "test": "tsx --test bridge/*.test.ts",
+    "test:coverage": "node --import tsx --test --experimental-test-coverage --test-coverage-exclude='**/*.test.ts' --test-coverage-lines=100 --test-coverage-functions=100 --test-coverage-branches=100 bridge/*.test.ts",
+    "ci": "npm run typecheck && npm run test:coverage"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

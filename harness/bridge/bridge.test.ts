@@ -62,3 +62,8 @@ test("the schema rejects an Action with an unknown field", () => {
     "additionalProperties:false should reject a reward-shaped field like 'payoff'",
   );
 });
+
+test("close() resolves (full Bridge surface is exercised)", async () => {
+  const bridge = new NullBridge();
+  await assert.doesNotReject(() => bridge.close());
+});
