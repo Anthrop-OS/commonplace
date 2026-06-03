@@ -122,7 +122,8 @@ fi
 # --- in-flight search (funnel T1 foundational) -----------------------------
 # The wrapper performs the search; you read the result. Cheap pre-flight as
 # structure, not voluntary prose.
-kw="$(printf '%s' "$tail" | tr '-_' '  ' | tr -s ' ')"
+# Note: set1 is '_-' not '-_' — BSD/macOS tr parses a leading '-' as a flag.
+kw="$(printf '%s' "$tail" | tr '_-' '  ' | tr -s ' ')"
 echo
 echo "── in-flight search (keywords: ${kw}) ──"
 if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
