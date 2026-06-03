@@ -76,3 +76,30 @@ transparency, scaffold-not-replace.
 Follow `TASKS.md` in order. **One task per branch/PR. Stop after each task for operator
 review — do not chain tasks autonomously.** The clean-room milestone in `TASKS.md` is the
 first definition of done.
+
+### main is protected — every change goes through a PR
+
+`main` is protected server-side by the `protect-main` ruleset (no direct push, no
+force-push, no deletion; a PR is required). A client-side `.githooks/pre-push` is
+defense-in-depth — it fails fast locally before the network round-trip. `--no-verify`
+skips the local hook but the server still refuses; there is no agent bypass.
+
+### worktree-per-task
+
+The main clone has a single process-global HEAD; two sessions that each `git checkout -b`
+clobber each other. Isolate every task in its own worktree:
+
+```sh
+./scripts/bootstrap.sh                      # once per clone: sets core.hooksPath=.githooks
+./scripts/preflight.sh                       # classify cwd; HALT if main clone drifted
+./scripts/new-task.sh ops/<branch>           # worktree at ../commonplace-wt/<branch>, off origin/main
+cd ../commonplace-wt/<branch>                # work here; commit; push; open PR
+```
+
+`new-task.sh` also runs the funnel T1 in-flight search (open PRs/issues for the branch
+keywords) by construction — read its output before authoring. After your PR merges, clean
+up with `git worktree remove <path>` from the main clone. Do **not** reset the main clone's
+HEAD if you find it drifted — another session may own it.
+
+These scripts are adopted from `homelab-s5oyt03iv9/homelab-ops` and maintained locally for
+now; a shared toolkit extraction is tracked in that repo (issue #594).
