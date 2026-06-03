@@ -1,0 +1,41 @@
+name: Drift
+description: Observed behavior differs from a declared design doc, ADR, or schema
+title: "[drift] "
+labels: ["kind:drift"]
+body:
+  - type: input
+    id: source
+    attributes:
+      label: Source of declared state (path or URL)
+      placeholder: "decisions/adr-0004-autotelic-drive-layer.md, or logbook/schema/entry.schema.yaml:47"
+    validations:
+      required: true
+  - type: textarea
+    id: declared
+    attributes:
+      label: Declared
+      description: What the doc / ADR / schema says should be true
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed
+      description: What the running system / code actually does
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: How it was detected
+      render: shell
+  - type: dropdown
+    id: action
+    attributes:
+      label: Proposed resolution
+      options:
+        - update-declared   # reality is correct; update the doc/ADR/schema (supersede the ADR, don't delete)
+        - revert-observed   # the declared state is correct; fix the code/system
+        - investigate       # unclear which is right
+    validations:
+      required: true
