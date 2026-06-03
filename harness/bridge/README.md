@@ -64,6 +64,20 @@ carries JSON between the two languages is **not here** — it is orchestration (
 `observe()` against the canonical schema — proving the contract holds with **no
 game attached**. That is the T1 acceptance bar.
 
+### Reference implementations
+
+| Impl | What | For |
+|---|---|---|
+| `NullBridge` | connects to no world; empty `Perception`, no-op `act()` | the contract smoke test (T1) |
+| `SyntheticBridge` | a **deterministic in-memory toy world** (places, energy, gathering); not a game | developing the loop + drives (T3/T4/T5) before a real adapter exists, and CI |
+
+`SyntheticBridge` has no wall clock and no RNG (`observedAt` is a logical tick), so
+a given action sequence always yields the same Perceptions. It also exposes
+`operatorAct()` — a second actor mutating the *same* world — to exercise
+**dual-control** deterministically (the Stardew P1 model: two actors, one world;
+see `decisions/adr-0007-substrate-ladder.md`). Real game adapters still live in
+`../adapters/`; `SyntheticBridge` is a fixture, not an adapter.
+
 ## Out of scope — by design
 
 | Not here | Where |
