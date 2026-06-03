@@ -1,16 +1,16 @@
 ---
 topic: substrate-selection
-status: converging
+status: resolved
 date: 2026-06-03
 related-adrs: [adr-0003]
-resolves-to:
+resolves-to: adr-0007
 ---
 
 # Substrate selection — which world(s) the dyad inhabits
 
-> Status: **converging**. Not binding. `adr-0003` already locked *Melvor as the
-> clean-room first substrate*; this note evaluates the substrate **ladder** beyond
-> it and surfaces a strong new entrant (Stardew Valley). Resolves into a new ADR.
+> Status: **resolved** → [[adr-pending-76f26c6e-substrate-ladder]] (operator,
+> 2026-06-03): **Melvor = P0, Stardew Valley = P1+**; dual-control staged to P1.
+> The analysis below is the reasoning trail; the decision lives in the ADR.
 
 ## Question
 

@@ -16,7 +16,7 @@ decisions still ahead, and a dated snapshot of where we are.
 
 | Layer | Is | Milestone 0 choice | Reference |
 |---|---|---|---|
-| **L1** substrate | the world itself | **Melvor** (clean-room); Stendhal / AI Town deferred | `decisions/adr-0003-*` |
+| **L1** substrate | the world itself | **Melvor = P0** (clean-room); **Stardew Valley = P1+** (dual-control); others deferred | `adr-0003-*`, `adr-0007` substrate ladder |
 | **L2** harness + bridge | executor + perception↔action seam | **TypeScript**; runtime (OpenClaw / ElizaOS / Hermes) **unchosen** | `harness/README.md`, `harness/bridge/README.md`, `decisions/adr-0006-*` |
 | **L3** cognition | autotelic drives (core IP) | **Python** | `drives/README.md`, `decisions/adr-0004-*`, `adr-0006-*` |
 
@@ -88,7 +88,7 @@ Evaluations still in motion live in `exploration/` and resolve into ADRs.
 
 | Note | Status | About |
 |---|---|---|
-| `exploration/substrate-selection.md` | converging | the substrate ladder beyond Melvor; Stardew Valley as a strong M0 candidate (native dual-control via co-op) |
+| `exploration/substrate-selection.md` | **resolved → adr-0007** | substrate ladder: Melvor P0, Stardew P1+ (dual-control staged to P1) |
 | `exploration/gateway-selection.md` | converging | operator↔agent channel; MVP = AstrBot over Discord, two-way (transport-not-brain; `discord.py` fallback) |
 
 ## Governance / ops track (parallel to the product)
