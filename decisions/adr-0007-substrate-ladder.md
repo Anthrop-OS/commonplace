@@ -1,14 +1,14 @@
 ---
-id: pending
+id: 0007
 uuid: 76f26c6e
 title: Substrate ladder — Melvor is P0, Stardew Valley is P1+
 date: 2026-06-03
 status: accepted
 ---
 
-# ADR-XXXX — Substrate ladder — Melvor is P0, Stardew Valley is P1+
+# ADR-0007 — Substrate ladder — Melvor is P0, Stardew Valley is P1+
 
-> uuid `76f26c6e` (stable alias; authored as `adr-pending-76f26c6e-substrate-ladder`,
+> uuid `76f26c6e` (stable alias; authored as `adr-0007-substrate-ladder`,
 > numbered on merge). Output of a decision acked by the operator (cyber-ayi),
 > 2026-06-03. Resolves [[exploration-substrate-selection]]; extends
 > [[adr-0003-melvor-clean-room-first]].
