@@ -1,15 +1,15 @@
 ---
-id: pending
+id: 0005
 uuid: cebf54db
 title: Split system (public) from record (private) into two repos, day one
 date: 2026-06-03
 status: accepted
 ---
 
-# ADR-XXXX — Split system (public) from record (private) into two repos, day one
+# ADR-0005 — Split system (public) from record (private) into two repos, day one
 
 > uuid `cebf54db` (stable alias; authored as
-> `adr-pending-cebf54db-public-private-split`, numbered on merge). Output of a
+> `adr-0005-public-private-split`, numbered on merge). Output of a
 > decision acked by the operator (cyber-ayi), 2026-06-03.
 
 ## Decision
@@ -57,4 +57,4 @@ filter on that tier, not a retroactive scrub.
 
 - `README.md`, `AGENTS.md` rule 2, `logbook/schema/entry.schema.yaml`
 - `homelab-s5oyt03iv9/commonplace-book` (private record repo)
-- Related: [[adr-0001-adopt-homelab-ops-governance]], [[adr-pending-49c91ca1-licensing]]
+- Related: [[adr-0001-adopt-homelab-ops-governance]], [[adr-0002-licensing]]
