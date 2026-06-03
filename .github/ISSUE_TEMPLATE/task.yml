@@ -1,0 +1,60 @@
+name: Task
+description: A unit of build work — bridge, adapter, drive layer, logbook, ops, design
+title: "[task] "
+labels: ["kind:task"]
+body:
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Layer
+      description: Which part of the system this touches
+      options:
+        - l1-substrate    # game world / bridge to it
+        - l2-harness      # agent runtime + perception/action bridge
+        - l3-drives       # identity / needs / autotelic selector / memory
+        - logbook         # schema, pipeline, visibility tooling
+        - ops             # tooling, CI, governance, repo plumbing
+        - design          # design docs / ADR-worthy exploration
+        - meta            # cross-cutting / project-level
+    validations:
+      required: true
+  - type: dropdown
+    id: substrate
+    attributes:
+      label: Substrate (if substrate-specific)
+      options:
+        - melvor
+        - stendhal
+        - ai-town
+        - none
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      default: 2
+      options:
+        - p0
+        - p1
+        - p2
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome (what does done look like)
+      placeholder: |
+        e.g. NullBridge passes the smoke test; Perception/Action types compile with no game logic
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps / approach (link TASKS.md item or design doc if relevant)
+      placeholder: |
+        TASKS.md T1, or design/<doc>.md, or inline numbered steps
+  - type: textarea
+    id: precond
+    attributes:
+      label: Preconditions / dependencies
+      placeholder: |
+        e.g. depends on T1 bridge interface; local Ollama running

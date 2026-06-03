@@ -1,0 +1,39 @@
+name: Decision
+description: Needs an operator decision before dependent work can proceed
+title: "[decision] "
+labels: ["kind:decision", "blocked:waiting-on-decision"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A structural decision (architecture, schema, taxonomy, license, substrate)
+        must be acked here **before** implementation. Once accepted, record it as an
+        ADR (`decisions/adr-pending-<uuid>-<slug>.md`) — see AGENTS.md "ADR protocol".
+        An ADR documents a decision already made; it is not where the decision is made.
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Forces / constraints that make this a decision rather than a default
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Options
+      placeholder: |
+        - **A**: …
+          - Pro: …
+          - Con: …
+        - **B**: …
+    validations:
+      required: true
+  - type: textarea
+    id: recommendation
+    attributes:
+      label: Recommendation
+  - type: input
+    id: blocks
+    attributes:
+      label: Issue(s) / work blocked by this decision
+      placeholder: "#12, #14"
