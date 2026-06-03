@@ -1,0 +1,46 @@
+name: adr-pr-check
+
+# Layer 1 (loud, in-PR): a PR may NOT hand-number an ADR. New decision files
+# must be authored as adr-pending-<uuid>-<slug>.md; numbering is the adr-assign
+# Action's exclusive job on merge. Also runs the shared invariant checker so
+# malformed frontmatter is caught before merge.
+
+on:
+  pull_request:
+    paths:
+      - 'decisions/**'
+      - 'tools/adr-verify.sh'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: No hand-numbered ADR added
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          added="$(git diff --diff-filter=A --name-only "$BASE_SHA" HEAD -- 'decisions/adr-*.md' || true)"
+          rc=0
+          while IFS= read -r f; do
+            [ -n "$f" ] || continue
+            b="$(basename "$f")"
+            case "$b" in
+              adr-pending-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]-*.md) ;;
+              *)
+                echo "FAIL: $f — new ADRs must be adr-pending-<8hex>-<slug>.md;" \
+                     "numbers are assigned automatically on merge (see AGENTS.md ADR PROTOCOL)"
+                rc=1 ;;
+            esac
+          done <<< "$added"
+          exit "$rc"
+
+      - name: ADR corpus invariants
+        run: bash tools/adr-verify.sh        # default mode: pending allowed

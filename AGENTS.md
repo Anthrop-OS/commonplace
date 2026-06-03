@@ -103,3 +103,25 @@ HEAD if you find it drifted — another session may own it.
 
 These scripts are adopted from `homelab-s5oyt03iv9/homelab-ops` and maintained locally for
 now; a shared toolkit extraction is tracked in that repo (issue #594).
+
+## ADR protocol — recording decisions
+
+Architecturally significant decisions are recorded as ADRs under `decisions/`.
+Copy `decisions/TEMPLATE.md`; **never edit it in place**.
+
+- **Never hand-assign an ADR number.** Numbers are allocated automatically on
+  merge to `main`. Hand-numbering races across concurrent PRs.
+- Author a new ADR as `decisions/adr-pending-<uuid>-<slug>.md` where `<uuid>` =
+  8 lowercase hex (`openssl rand -hex 4`). Frontmatter: `id: pending`,
+  `uuid: <same 8-hex>`, `title`, `date`, `status`.
+- Refer to an in-flight ADR by its `uuid` (stable for the PR's life).
+- On merge, `.github/workflows/adr-assign.yml` (serialized via a `concurrency`
+  group) computes the next contiguous number, renames the file to
+  `adr-<NNNN>-<slug>.md`, sets `id: NNNN`, rewrites in-repo references, and
+  opens a follow-up assignment PR. `uuid` is retained forever as a stable alias.
+- An ADR records a decision **already made** with the operator — it is not the
+  place to make one. Supersede by writing a new ADR that marks the predecessor
+  `status: superseded by adr-NNNN`; never delete an ADR to replace it.
+- `tools/adr-verify.sh` is the single invariant checker (run by
+  `adr-pr-check.yml` on PRs, and by `adr-assign.yml` post-rename, fail-closed).
+  A red `adr-pr-check` is authoritative.
