@@ -1,0 +1,42 @@
+name: harness-ci
+
+# Automated acceptance for the TypeScript harness (L2): typecheck + smoke tests +
+# 100% coverage of the runtime surface. The bridge contract (T1) and every adapter
+# (T2+) must stay green here. adr-pr-check covers decisions/; this covers harness/.
+
+on:
+  pull_request:
+    paths:
+      - "harness/**"
+      - ".github/workflows/harness-ci.yml"
+  push:
+    branches: [main]
+    paths:
+      - "harness/**"
+      - ".github/workflows/harness-ci.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: harness-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: harness
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: harness/package-lock.json
+      - run: npm ci
+      - name: typecheck (tsc --noEmit)
+        run: npm run typecheck
+      - name: test + coverage gate (100% runtime surface)
+        run: npm run test:coverage
