@@ -32,7 +32,7 @@ decisions still ahead, and a dated snapshot of where we are.
 ```
         ┌───────────────────────────────┐
         │  T1  bridge interface  (root)  │   substrate-agnostic
-        │      Perception/Action/Bridge  │   Perception/Action/Bridge
+        │      Perception/Action/Bridge  │   DONE ✓ (PR #14)
         └───────┬───────────────┬────────┘
                 │               │
         ┌───────▼──────┐ ┌──────▼────────┐    ┌───────────────────┐
@@ -48,18 +48,28 @@ decisions still ahead, and a dated snapshot of where we are.
 ```
 
 **Critical path:** T1 → (T2 ∥ T4) → T5. **T3 is independent** and can land any
-time (parallel with T1/T2). **T1 is the single gate** — once it lands, T2 and T4
-parallelize and T3 proceeds on its own.
+time (parallel with T1/T2). **T1 was the single gate — now landed**, so T2 and T4
+are unblocked and parallelize, and T3 proceeds on its own.
 
 ### Task status (authoritative status: the issue tracker, not this file)
 
 | Task | Routing | Depends | State (2026-06-03) |
 |---|---|---|---|
-| **T1** bridge interface | `cloud` | — | **specced** (issue #9, ADR-0006); `harness/bridge/README.md` landed; **code not written** |
-| **T2** Melvor adapter | `cloud` | T1 | not started |
-| **T3** logbook pipeline | `cloud` / `local` at runtime | — | not started (parallelizable now) |
-| **T4** drive layer templates | `cloud` / `local` fills | T1 | not started |
-| **T5** orchestration + run | `cloud` / routing configured | T1–T4 | not started |
+| **T1** bridge interface | `cloud` | — | **done** — `harness/bridge/` shipped (PR #14, closed #9): canonical `schema/*.json` + TS types + `NullBridge` + schema-validating smoke test |
+| **T2** Melvor adapter | `cloud` | T1 | **ready** (T1 landed) — not started |
+| **T3** logbook pipeline | `cloud` / `local` at runtime | — | **ready** (independent) — not started |
+| **T4** drive layer templates | `cloud` / `local` fills | T1 | **ready** (T1 landed) — not started |
+| **T5** orchestration + run | `cloud` / routing configured | T1–T4 | blocked on T2–T4 |
+
+### Automated acceptance (CI)
+
+| Gate | Scope | Required? |
+|---|---|---|
+| **`harness-ci`** (`.github/workflows/harness-ci.yml`) | every PR: `npm ci` → typecheck → tests + **100% coverage** of the L2 runtime surface | **yes** — required status check on `protect-main` |
+| **`adr-pr-check`** | ADR invariants on `decisions/**` PRs | yes (on ADR PRs) |
+
+L2 toolchain: `harness/` is the TypeScript project root (`package.json`, strict
+`tsconfig`, tsx + `node:test` + ajv). `drives/` will be the Python root (T4).
 
 ## Decisions still ahead (future decision-gates → ADRs)
 
