@@ -6,7 +6,7 @@ game world. The runtime is *not* the world (L1) and *not* the drive layer (L3 �
 
 ```
 harness/
-├── bridge/      substrate-agnostic perception↔action interface
+├── bridge/      substrate-agnostic perception↔action contract  (see bridge/README.md)
 └── adapters/    per-substrate adapters  (see IP boundary below)
 ```
 
