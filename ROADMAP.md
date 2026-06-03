@@ -82,6 +82,14 @@ Each downstream task carries its own small decision-gate. None block T1.
 | Melvor **act path**: mod API vs CDP / headless-Chromium | T2 | `TASKS.md` requires choose-and-justify |
 | **salient push** channel: ntfy vs Discord | T3 | both named in `TASKS.md` |
 
+## Open explorations (pre-decision)
+
+Evaluations still in motion live in `exploration/` and resolve into ADRs.
+
+| Note | Status | About |
+|---|---|---|
+| `exploration/substrate-selection.md` | converging | the substrate ladder beyond Melvor; Stardew Valley as a strong M0 candidate (native dual-control via co-op) |
+
 ## Governance / ops track (parallel to the product)
 
 Adopted from `homelab-s5oyt03iv9/homelab-ops`. This track makes agent collaboration

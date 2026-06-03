@@ -104,6 +104,15 @@ HEAD if you find it drifted — another session may own it.
 These scripts are adopted from `homelab-s5oyt03iv9/homelab-ops` and maintained locally for
 now; a shared toolkit extraction is tracked in that repo (issue #594).
 
+## Exploration before decision
+
+Open questions and option evaluations live in `exploration/` (markdown, PR-reviewed)
+**before** anything is decided — substrate surveys, MVP scoping, "what if we…". A
+note that converges produces an ADR: the ADR cites the note, and the note's `status`
+becomes `resolved` with `resolves-to: adr-NNNN`. Notes are never deleted (the
+reasoning trail is part of the record). Do not record a decision in `decisions/`
+that was never explored or operator-acked. See `exploration/README.md`.
+
 ## ADR protocol — recording decisions
 
 Architecturally significant decisions are recorded as ADRs under `decisions/`.
