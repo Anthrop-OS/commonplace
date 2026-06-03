@@ -1,15 +1,15 @@
 ---
-id: pending
+id: 0006
 uuid: 6636d887
 title: Milestone 0 is polyglot — TypeScript harness, Python cognition, JSON bridge seam
 date: 2026-06-03
 status: accepted
 ---
 
-# ADR-XXXX — Milestone 0 is polyglot — TypeScript harness, Python cognition, JSON bridge seam
+# ADR-0006 — Milestone 0 is polyglot — TypeScript harness, Python cognition, JSON bridge seam
 
 > uuid `6636d887` (stable alias; authored as
-> `adr-pending-6636d887-polyglot-ts-harness-python-cognition`, numbered on
+> `adr-0006-polyglot-ts-harness-python-cognition`, numbered on
 > merge). Output of a decision acked by the operator (cyber-ayi), 2026-06-03,
 > in the T1 planning session.
 
