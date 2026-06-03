@@ -8,7 +8,7 @@ resolves-to: adr-0007
 
 # Substrate selection — which world(s) the dyad inhabits
 
-> Status: **resolved** → [[adr-pending-76f26c6e-substrate-ladder]] (operator,
+> Status: **resolved** → [[adr-0007-substrate-ladder]] (operator,
 > 2026-06-03): **Melvor = P0, Stardew Valley = P1+**; dual-control staged to P1.
 > The analysis below is the reasoning trail; the decision lives in the ADR.
 
