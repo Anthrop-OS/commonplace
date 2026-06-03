@@ -1,0 +1,58 @@
+# Logbook entry schema  (v0.1)
+#
+# Every entry carries a `visibility` tier — even while the entire
+# record defaults to private. This keeps the "publish a dataset later"
+# option alive: a future shareable dataset is just a filter on
+# `visibility`, not a painful retroactive redaction of thousands of
+# unlabeled notes. The tier is the insurance you buy on day one.
+
+$schema: "commonplace/logbook-entry/v0.1"
+
+required:
+
+  visibility:
+    type: enum
+    values: [private, shareable, narrative]
+    default: private
+    notes: >
+      private   - full fidelity, mesh-only, never published.
+      shareable - de-identified trace eligible for a public dataset.
+                  Must pass the "can this be traced back to the operator?"
+                  filter (timestamps reveal sleep/work rhythm; intervention
+                  content reveals preferences) - not merely name-stripping.
+      narrative - written deliberately for an audience. Accepts that it
+                  carries performance; here that is a feature, not a leak.
+
+  ts:
+    type: datetime          # ISO-8601 with timezone offset
+
+  type:
+    type: enum
+    values: [observation, action, reflection, intervention, relation-event]
+
+  actor:
+    type: enum
+    values: [agent, operator, dyad]
+
+  body:
+    type: markdown
+
+optional:
+
+  redaction_checked:
+    type: bool
+    default: false
+    notes: "MUST be true for any shareable/narrative entry before publication."
+
+  curiosity:                # seed of a homegrown autotelic-behavior metric
+    type: object
+    fields:
+      question: { type: string,  notes: "the open question the agent was chasing, if any" }
+      detour:   { type: bool,    notes: "did the agent divert from the efficient path?" }
+      surprise: { type: string,  notes: "what violated the agent's expectation" }
+
+  relation:                 # for relation-event entries
+    type: object
+    fields:
+      kind:   { type: enum, values: [closure, rupture, repair, revision, absence-response] }
+      detail: { type: markdown }

@@ -1,0 +1,58 @@
+# Public/private split — see AGENTS.md rule 2.
+# The real logbook record never lives in this repo; it lives in `commonplace-book`.
+# Personalized fills and private adapters are likewise excluded here.
+# Commit-then-delete does NOT remove anything from git history — treat this file
+# as a guardrail, not a remediation tool.
+
+# Real logbook entries (the record) — never here
+logbook/entries/
+logbook/**/*.entry.md
+logbook/**/*.entry.yaml
+
+# Personalized fills of public templates
+*.local.*
+*.filled.*
+drives/identity/*.filled.*
+drives/**/*.local.*
+
+# Private adapters (e.g. 2004scape — IP gray area)
+harness/adapters/private/
+
+# Secrets / env
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+
+# Local model artifacts / caches
+.ollama/
+models/
+*.gguf
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+*.iml
+
+# Build / dependency
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+dist/
+build/
+.venv/
+venv/
+target/
+
+# Test / coverage
+.coverage
+coverage/
+htmlcov/
+.pytest_cache/
