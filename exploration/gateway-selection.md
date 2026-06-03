@@ -8,8 +8,9 @@ resolves-to:
 
 # Gateway selection — the operator↔agent async channel
 
-> Status: **converging**. The MVP channel is decided (direct Discord, two-way);
-> the multi-platform *framework* choice is deferred. Resolves into an ADR.
+> Status: **converging**. MVP comms tool = **AstrBot** over Discord, two-way
+> (operator direction), used transport-not-brain. One open spike: the L3
+> integration path. Resolves into an ADR.
 
 ## Question
 
@@ -40,9 +41,9 @@ Don't conflate them. This note is the IM channel.
 
 | Option | Type / lang | Discord | Transport-not-brain | Agent push | Self-host | Ops cost | Fit |
 |---|---|---|---|---|---|---|---|
-| **direct discord.py** | thin lib / Python | ✓ | **✓ purest** (you own it) | **✓ native** (`channel.send` anytime) | ✓ | **low for 1 platform** | **MVP** |
+| **direct discord.py** | thin lib / Python | ✓ | **✓ purest** (you own it) | **✓ native** (`channel.send` anytime) | ✓ | **low for 1 platform** | fallback — thinnest if AstrBot is too heavy |
 | **LangBot** | IM↔backend **bridge** / Python, Apache-2.0 | ✓ (10+) | ✓ (designed to front your backend) | event-driven, supports outbound | ✓ Ollama | medium | best *framework* when multi-platform is needed |
-| **AstrBot** | agentic IM infra / Python, 33k★ | ✓ | △ wants to be the agent (own LLM/persona/RAG) | needs a plugin to emit | ✓ | lowest (WebUI+Docker) | ops-heavy turnkey; overkill at 1:1 |
+| **AstrBot** | agentic IM infra / Python, 33k★ | ✓ | △ has own LLM/persona/RAG — must bypass via plugin so L3 stays the brain | **✓ via plugin** (event+scheduler send pipeline; `astrbot_plugin_proactive_chat` precedent) | ✓ Ollama/LM Studio | lowest (WebUI+Docker) | **MVP (operator choice)** — WebUI console + multi-platform-ready |
 | **NoneBot2** | low-level bot **framework** / Python | ✓ | ✓ you control all | ✓ framework-level | ✓ | high (write it all) | if direct discord.py outgrows itself |
 | **OpenClaw** | full agent app / TS+Electron | ✓ (+ many) | △ bundles its own runtime | runtime-coupled | ✓ | high (Electron/sandboxes) | its real strength is the browser/CDP harness, not a pure channel |
 | **ntfy** | one-way push service | ✗ (no chat) | ✓ | ✓ push-only | ✓ | minimal | only if the channel were one-way |
@@ -55,34 +56,44 @@ one-way pusher (ntfy) is out for MVP. The channel is **Discord, two-way**.
 
 ## Current lean / MVP decision
 
-**MVP = a direct, thin Discord bot (discord.py), two-way.** Operator DMs/channels
-the agent; the agent replies *and* pushes when it self-judges an entry salient.
+**MVP = AstrBot as the communication tool** (operator direction), two-way over
+Discord. AstrBot provides the message I/O, a WebUI ops console, Docker deploy, and
+a ready proactive-send pipeline; the operator gets a real control plane and
+multi-platform headroom from day one.
 
-Why direct over a framework, for MVP:
+Both decisive capabilities are confirmed:
+- **Agent-initiated salient push** — AstrBot's event+scheduler send pipeline
+  supports bot-initiated messages (the `astrbot_plugin_proactive_chat` plugin is a
+  working precedent). The L3 calls this to push when it judges an entry salient.
+- **Custom backend** — AstrBot takes a custom LLM provider via an OpenAI-compatible
+  interface, and a plugin framework for bespoke logic. Python — co-locates with the
+  Python L3 (ADR-0006).
 
-- The dyad is **1 operator / 1 agent / 1 platform** — the multi-platform gateways'
-  main value (many platforms, many users, a WebUI control plane) solves a problem
-  the MVP doesn't have.
-- **Agent-initiated push** — the decisive requirement — is trivial and fully under
-  our control with `discord.py` (`channel.send()` / DM anytime); a framework only
-  adds indirection between the drive layer and the wire.
-- **Transport-not-brain** is purest with a direct lib: zero framework cognition to
-  fight the custom L3.
-- Python `discord.py` **co-locates with the Python L3** (ADR-0006).
-- Cost is small for a single platform.
+**The discipline that makes this work — transport-not-brain.** AstrBot ships its own
+LLM loop, persona, RAG, and context-compression; the project's **L3 must stay the
+brain**. Integrate so AstrBot's cognition is bypassed, not stacked on top of L3:
 
-**Deferred (not MVP):** adopt a framework when multi-platform reach or an ops/WebUI
-control plane is actually needed. **LangBot** is the front-runner then — it is
-explicitly an *IM↔your-backend bridge* (transport-not-brain), Apache-2.0, event-
-driven, 10+ platforms, and even lists openclaw/hermes as pluggable backends.
+- **Preferred — plugin bridge:** a thin AstrBot plugin forwards inbound operator
+  messages to L3 and uses the send API for L3's outbound/proactive pushes. AstrBot's
+  LLM pipeline is bypassed entirely; it is pure I/O + ops console.
+- **Alternative — provider:** wrap L3 behind an OpenAI-compatible endpoint and
+  register it as AstrBot's provider, with AstrBot's own session/persona/context
+  features **disabled** so L3's memory/identity stays authoritative (else you get
+  two competing memory layers).
+
+**Fallback:** if AstrBot proves too heavy or its cognition can't be cleanly bypassed,
+drop to a **direct `discord.py`** bot (thinnest, purest transport-not-brain). The
+evaluation above stands; only the chosen tool changes.
 
 ## Open items
 
-- Agent-push via `discord.py` is a known capability (low risk) — no spike needed;
-  a smoke test in T3/T5 suffices.
-- Formalize the MVP channel decision as an ADR (channel = direct Discord, two-way;
-  frameworks deferred) and set this note `resolved`.
-- Revisit the framework choice (LangBot) only when multi-platform/ops is real.
+- **Spike: pick the integration path** (plugin bridge vs provider) and confirm
+  AstrBot's own context/persona layer can be fully bypassed so L3 is the sole brain.
+  This is the one real risk — verify before committing T3/T5 to AstrBot.
+- Confirm proactive push works end-to-end (L3 → AstrBot send → operator) with a
+  smoke test in T3/T5.
+- Formalize as an ADR once the integration path is validated (channel = AstrBot
+  over Discord, two-way, transport-not-brain), then set this note `resolved`.
 - Keep the IM gateway distinct from the future **LLM API gateway** (model routing).
 
 ## Sources
