@@ -1,0 +1,167 @@
+name: adr-assign
+
+# Coordinator: on merge to main, allocate the next contiguous ADR number to
+# every adr-pending-* file, rename it, fix frontmatter, rewrite in-repo
+# references, then open a PR with the assignment.
+#
+# Serialization: a single concurrency group means at most one assign run
+# executes at a time -> the max() read is consistent across runs.
+# Fail-closed: if tools/adr-verify.sh --no-pending does not pass, the job
+# exits non-zero WITHOUT opening a PR; the pending file stays pending.
+# Idempotent: no pending files -> no changes -> no PR (safe re-trigger).
+#
+# PR-based mode: the protect-main ruleset blocks direct push to main (no
+# force-push, PR required, bypass_actors: []), so this workflow cannot push
+# the rename commit straight to main. It opens a PR instead; CI runs on the
+# PR; merge (auto if enabled, else manual) completes the assignment.
+#
+# Adapted from homelab-s5oyt03iv9/homelab-ops .github/workflows/adr-assign.yml.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'decisions/adr-pending-*'
+  workflow_dispatch: {}   # manual recovery (e.g. a prior run failed mid-way)
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: adr-assign
+  cancel-in-progress: false
+
+jobs:
+  assign:
+    # never act on our own assignment commit (loop guard, defence in depth)
+    if: github.event.head_commit.author.name != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Assign numbers, rename, rewrite refs
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          pend=( decisions/adr-pending-*.md )
+          if [ "${#pend[@]}" -eq 0 ]; then
+            echo "no pending ADRs; nothing to do"; exit 0
+          fi
+
+          # deterministic order: first-introduced commit time, then name
+          tmp="$(mktemp)"
+          for f in "${pend[@]}"; do
+            ct="$(git log --diff-filter=A --follow --format=%ct -- "$f" | tail -1)"
+            printf '%s\t%s\n' "${ct:-0}" "$f" >> "$tmp"
+          done
+          sort -n -k1,1 -k2,2 "$tmp" | cut -f2 > "$tmp.ordered"
+
+          max=0
+          for n in decisions/adr-[0-9][0-9][0-9][0-9]-*.md; do
+            [ -e "$n" ] || continue
+            s="$(basename "$n" | sed -n 's/^adr-\([0-9]\{4\}\)-.*/\1/p')"
+            d=$((10#$s)); [ "$d" -gt "$max" ] && max="$d"
+          done
+
+          while IFS= read -r f; do
+            b="$(basename "$f")"
+            uuid="$(printf '%s' "$b" | sed -n 's/^adr-pending-\([0-9a-f]\{8\}\)-.*/\1/p')"
+            slug="$(printf '%s' "$b" | sed -n 's/^adr-pending-[0-9a-f]\{8\}-\(.*\)\.md$/\1/p')"
+            if [ -z "$uuid" ] || [ -z "$slug" ]; then
+              echo "FAIL: malformed pending name: $b"; exit 1
+            fi
+            max=$((max+1))
+            seq="$(printf '%04d' "$max")"
+            new="decisions/adr-${seq}-${slug}.md"
+
+            git mv "$f" "$new"
+            # frontmatter: id: pending -> id: NNNN  (only within the front block)
+            awk -v seq="$seq" '
+              NR==1 && $0=="---"{print; inf=1; next}
+              inf && $0=="---"{inf=0; print; next}
+              inf && $0 ~ /^id:[ \t]*pending[ \t]*$/ {print "id: " seq; next}
+              {print}
+            ' "$new" > "$new.tmp" && mv "$new.tmp" "$new"
+
+            # body H1: rewrite the first "# ADR..." title to "# ADR-NNNN —",
+            # preserving the title text after the em-dash. Match stops at the
+            # first em-dash, so "# ADR-XXXX —" and "# ADR-pending (uuid) —" are
+            # normalized too. If no H1 matches, the file is left as-is and the
+            # --no-pending verify step below fails closed (no PR).
+            awk -v seq="$seq" '
+              !done && /^# ADR/ { sub(/^# ADR[^—]*—/, "# ADR-" seq " —"); done=1 }
+              {print}
+            ' "$new" > "$new.tmp" && mv "$new.tmp" "$new"
+
+            # rewrite in-repo references to the old pending identity
+            old_noext="adr-pending-${uuid}-${slug}"
+            new_noext="adr-${seq}-${slug}"
+            # grep -rl exits 1 when there are NO in-repo references — the normal
+            # case. The `|| true` guard keeps set -e + pipefail from aborting
+            # the step after the rename but before verify/commit.
+            { grep -rl --binary-files=without-match -F "$old_noext" . \
+                --exclude-dir=.git 2>/dev/null || true; } | while IFS= read -r r; do
+              sed -i "s#${old_noext}#${new_noext}#g; s#ADR-${uuid}#ADR-${seq}#g" "$r"
+            done
+
+            echo "assigned ${uuid} -> ADR-${seq} (${new})"
+          done < "$tmp.ordered"
+          rm -f "$tmp" "$tmp.ordered"
+
+      - name: Verify (fail-closed, no PR on violation)
+        run: bash tools/adr-verify.sh --no-pending
+
+      - name: Open assignment PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "no changes to commit"; exit 0
+          fi
+
+          ts="$(date -u +%Y%m%d-%H%M%S)"
+          branch="auto/adr-assign-${ts}"
+
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -b "$branch"
+          git add -A
+
+          cat > /tmp/commit-msg.txt <<EOF
+          chore(adr): assign numbers to pending ADRs
+
+          Automated by .github/workflows/adr-assign.yml. PR-based because the
+          protect-main ruleset blocks direct push to main. uuid kept as a
+          permanent frontmatter alias.
+          EOF
+          git commit -F /tmp/commit-msg.txt
+          git push -u origin "$branch"
+
+          renames="$(git diff --name-status origin/main..HEAD -- decisions/ \
+            | awk '$1 ~ /^R/ {printf "- `%s` -> `%s`\n", $2, $3}')"
+
+          cat > /tmp/pr-body.md <<EOF
+          Automated ADR number assignment by \`.github/workflows/adr-assign.yml\`.
+
+          ## Renames
+
+          ${renames}
+
+          Triggered by push to \`main\` touching \`decisions/adr-pending-*\` (or manual \`workflow_dispatch\`). Auto-generated; safe to merge once CI is green.
+
+          PR-based mode rationale: the \`protect-main\` ruleset blocks direct push to \`main\`.
+          EOF
+
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "chore(adr): assign numbers to pending ADRs [auto]" \
+            --body-file /tmp/pr-body.md
+
+          # Try auto-merge (squash). Benign no-op if repo-level auto-merge is
+          # disabled — PR awaits manual merge in that case.
+          gh pr merge --auto --squash || echo "::notice::auto-merge unavailable; PR awaits manual merge"
