@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "action.schema.json",
+  "title": "Action",
+  "description": "One intent to act, consumed by Bridge.act(). Plain JSON (ADR-0006).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["affordance"],
+  "properties": {
+    "affordance": {
+      "type": "string",
+      "description": "The ActionSpec.id this action targets (from a Perception's affordances)."
+    },
+    "params": {
+      "type": "object",
+      "description": "Parameters for the chosen affordance."
+    },
+    "reason": {
+      "type": "string",
+      "description": "The autotelic 'why' — a question, novelty, or surprise. NOT a payoff or expected reward (ADR-0004). The bridge ignores it; the logbook records it."
+    }
+  }
+}

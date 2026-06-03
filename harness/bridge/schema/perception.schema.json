@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "perception.schema.json",
+  "title": "Perception",
+  "description": "One substrate-agnostic world snapshot, produced by Bridge.observe(). Plain JSON — no methods on the wire (ADR-0006).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["substrate", "observedAt", "state", "affordances"],
+  "properties": {
+    "substrate": {
+      "type": "string",
+      "description": "Which world produced this snapshot, e.g. 'null', 'melvor'."
+    },
+    "observedAt": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Epoch milliseconds at the moment of observation."
+    },
+    "state": {
+      "description": "Substrate-defined world snapshot. Opaque at the bridge layer; any JSON. An adapter types this for its world (T2)."
+    },
+    "affordances": {
+      "type": "array",
+      "description": "What the agent could do now — the menu the autotelic selector chooses from.",
+      "items": { "$ref": "#/$defs/actionSpec" }
+    }
+  },
+  "$defs": {
+    "actionSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable identifier an Action references via its 'affordance' field."
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-readable name for the affordance."
+        },
+        "params": {
+          "type": "object",
+          "description": "Free-form description of the parameters this affordance accepts."
+        }
+      }
+    }
+  }
+}

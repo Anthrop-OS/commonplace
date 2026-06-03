@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "action-result.schema.json",
+  "title": "ActionResult",
+  "description": "The outcome of Bridge.act(). The next observe() reflects any world change.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status"],
+  "properties": {
+    "status": {
+      "enum": ["ok", "rejected", "error"],
+      "description": "'ok' applied; 'rejected' refused by the world (e.g. invalid affordance); 'error' the bridge itself failed."
+    },
+    "detail": {
+      "type": "string",
+      "description": "Human-readable detail, especially for 'rejected' / 'error'."
+    }
+  }
+}

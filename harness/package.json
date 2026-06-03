@@ -1,0 +1,18 @@
+{
+  "name": "@commonplace/harness",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "L2 harness — substrate-agnostic bridge (L2) and per-substrate adapters. See bridge/README.md.",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test bridge/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "ajv": "^8.17.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
