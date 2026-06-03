@@ -80,7 +80,7 @@ Each downstream task carries its own small decision-gate. None block T1.
 | harness **runtime**: OpenClaw vs ElizaOS vs Hermes | T2 / T5 | candidates listed in `harness/README.md`, unchosen |
 | **IPC transport** TS↔Python (how JSON crosses the seam) | T5 | explicitly deferred by ADR-0006 |
 | Melvor **act path**: mod API vs CDP / headless-Chromium | T2 | `TASKS.md` requires choose-and-justify |
-| **salient push** channel: ntfy vs Discord | T3 | both named in `TASKS.md` |
+| **salient push** channel: ntfy vs Discord | T3 | **converging → MVP: AstrBot over Discord, two-way** (transport-not-brain; `discord.py` fallback). See `exploration/gateway-selection.md` |
 
 ## Open explorations (pre-decision)
 
@@ -89,6 +89,7 @@ Evaluations still in motion live in `exploration/` and resolve into ADRs.
 | Note | Status | About |
 |---|---|---|
 | `exploration/substrate-selection.md` | converging | the substrate ladder beyond Melvor; Stardew Valley as a strong M0 candidate (native dual-control via co-op) |
+| `exploration/gateway-selection.md` | converging | operator↔agent channel; MVP = AstrBot over Discord, two-way (transport-not-brain; `discord.py` fallback) |
 
 ## Governance / ops track (parallel to the product)
 
