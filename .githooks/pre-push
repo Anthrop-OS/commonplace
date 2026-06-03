@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Block direct push to main. Bypass with `--no-verify` (server-side
+# `protect-main` ruleset still blocks it regardless — this hook is
+# defense-in-depth, a fast local failure before the network round-trip).
+# See AGENTS.md "How to work" for rationale.
+#
+# Adapted from homelab-s5oyt03iv9/homelab-ops .githooks/pre-push.
+
+set -euo pipefail
+
+protected="refs/heads/main"
+
+while read -r _local_ref _local_sha remote_ref _remote_sha; do
+  if [ "$remote_ref" = "$protected" ]; then
+    echo "blocked: direct push to $protected on commonplace" >&2
+    echo "  open a PR instead. The server-side protect-main ruleset enforces" >&2
+    echo "  this too, so --no-verify will not get you a direct push." >&2
+    exit 1
+  fi
+done
+
+exit 0
