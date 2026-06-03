@@ -1,15 +1,15 @@
 ---
-id: pending
+id: 0004
 uuid: 9ce72919
 title: The drive layer is autotelic, not a reward optimizer
 date: 2026-06-03
 status: accepted
 ---
 
-# ADR-XXXX — The drive layer is autotelic, not a reward optimizer
+# ADR-0004 — The drive layer is autotelic, not a reward optimizer
 
 > uuid `9ce72919` (stable alias; authored as
-> `adr-pending-9ce72919-autotelic-drive-layer`, numbered on merge). Output of a
+> `adr-0004-autotelic-drive-layer`, numbered on merge). Output of a
 > decision acked by the operator (cyber-ayi), 2026-06-03.
 
 ## Decision

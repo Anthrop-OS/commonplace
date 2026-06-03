@@ -1,14 +1,14 @@
 ---
-id: pending
+id: 0002
 uuid: 49c91ca1
 title: License code AGPL-3.0, docs CC-BY-SA-4.0, ethics as a non-binding notice
 date: 2026-06-03
 status: accepted
 ---
 
-# ADR-XXXX — License code AGPL-3.0, docs CC-BY-SA-4.0, ethics as a non-binding notice
+# ADR-0002 — License code AGPL-3.0, docs CC-BY-SA-4.0, ethics as a non-binding notice
 
-> uuid `49c91ca1` (stable alias; authored as `adr-pending-49c91ca1-licensing`,
+> uuid `49c91ca1` (stable alias; authored as `adr-0002-licensing`,
 > numbered on merge). Output of a decision acked by the operator (cyber-ayi),
 > 2026-06-03.
 
@@ -52,4 +52,4 @@ deceptive companionship) but does **not** modify or restrict the AGPL grant.
 ## References
 
 - `LICENSE`, `LICENSE-docs`, `ETHICS.md`, `README.md`
-- Related: [[adr-pending-cebf54db-public-private-split]]
+- Related: [[adr-0005-public-private-split]]

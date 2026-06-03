@@ -1,15 +1,15 @@
 ---
-id: pending
+id: 0003
 uuid: 533e2960
 title: Start on Melvor as a clean-room substrate; defer richer worlds
 date: 2026-06-03
 status: accepted
 ---
 
-# ADR-XXXX — Start on Melvor as a clean-room substrate; defer richer worlds
+# ADR-0003 — Start on Melvor as a clean-room substrate; defer richer worlds
 
 > uuid `533e2960` (stable alias; authored as
-> `adr-pending-533e2960-melvor-clean-room-first`, numbered on merge). Output of a
+> `adr-0003-melvor-clean-room-first`, numbered on merge). Output of a
 > decision acked by the operator (cyber-ayi), 2026-06-03.
 
 ## Decision
@@ -58,4 +58,4 @@ adding world complexity.
 
 - `TASKS.md` (Milestone 0, T2), `harness/README.md`, `AGENTS.md` rule 4
 - Related: [[adr-0001-adopt-homelab-ops-governance]],
-  [[adr-pending-9ce72919-autotelic-drive-layer]]
+  [[adr-0004-autotelic-drive-layer]]
