@@ -4,9 +4,12 @@ name: harness-ci
 # 100% coverage of the runtime surface. The bridge contract (T1) and every adapter
 # (T2+) must stay green here.
 #
-# Runs on EVERY pull request (no paths filter) so it can be a *required* status
-# check: a path-filtered required check never reports on unrelated PRs and would
-# block them forever. npm is cached, so a no-harness PR still completes in ~15s.
+# Runs on EVERY pull request as a signal (no paths filter). It is NOT a hard
+# ruleset-required check — cc waits for green before self-merging, and CI checks
+# are signals not gates here, matching homelab-ops governance (adr-0001). (A hard
+# required check deadlocks GITHUB_TOKEN-authored bot PRs, e.g. adr-assign numbering,
+# which cannot trigger workflows; a real hard gate waits for Phase D's GitHub App.)
+# Running on all PRs keeps the signal universal; npm is cached (~15s).
 
 on:
   pull_request:

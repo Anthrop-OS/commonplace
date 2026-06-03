@@ -63,10 +63,16 @@ are unblocked and parallelize, and T3 proceeds on its own.
 
 ### Automated acceptance (CI)
 
-| Gate | Scope | Required? |
+CI checks are **signals, not hard ruleset gates** — matching homelab-ops governance
+(`adr-0001`): `protect-main` only enforces `deletion` / `non_fast_forward` /
+`pull_request`. cc waits for green before self-merging; nothing mechanically blocks
+a merge on a red check (a deliberate hard gate is deferred to Phase D, where a
+GitHub App lets bot PRs trigger checks without the numbering-PR deadlock).
+
+| Check | Scope | Enforcement |
 |---|---|---|
-| **`harness-ci`** (`.github/workflows/harness-ci.yml`) | every PR: `npm ci` → typecheck → tests + **100% coverage** of the L2 runtime surface | **yes** — required status check on `protect-main` |
-| **`adr-pr-check`** | ADR invariants on `decisions/**` PRs | yes (on ADR PRs) |
+| **`harness-ci`** (`.github/workflows/harness-ci.yml`) | every PR: `npm ci` → typecheck → tests + **100% coverage** of the L2 runtime surface | signal; cc gates self-merge on green |
+| **`adr-pr-check`** | ADR invariants on `decisions/**` PRs | signal (on ADR PRs) |
 
 L2 toolchain: `harness/` is the TypeScript project root (`package.json`, strict
 `tsconfig`, tsx + `node:test` + ajv). `drives/` will be the Python root (T4).
