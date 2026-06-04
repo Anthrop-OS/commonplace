@@ -47,6 +47,7 @@ __pycache__/
 *.pyo
 dist/
 build/
+*.egg-info/
 .venv/
 venv/
 target/
