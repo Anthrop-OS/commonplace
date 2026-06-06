@@ -35,6 +35,7 @@ carry biases (reward/optimization) we must **not** adopt given autotelic-not-rew
 | **Hermes** (NousResearch) | provider-agnostic, **local-first** (Ollama/LM Studio) | local "fallback brain" (privacy routing, adr-0006 rule 6) | needs ≥64k ctx; no world precedent |
 | **Voyager / ODYSSEY / MindForge / Co-Voyager** | Minecraft open-world agents: **auto-curriculum + skill library** | reference architecture for open-world exploration | **skill-acquisition + curriculum = reward-shaped → conflicts with adr-0004**; reference only |
 | **PIANO** (Project Sid / Altera) | parallel multi-stream cognition; agents **generate own goals** from social motivation; 1000+ agents | good **L3** reference (multi-stream + self-generated goals) | civilization/multi-agent framing; not a single-dyad harness |
+| **AgentScope** (Alibaba DAMO, Apache-2.0) | Python multi-agent framework; **`msghub` broadcast** + pipeline orchestration; official 7-agent Werewolf game template; Ollama / local-LLM friendly | **multi-agent comms primitive** — closest thing to a "drop N agents into a room" runtime; useful for the multi-agent substrate option in [[substrate-evennia-multi-agent]] | workflow/task-oriented; less *persistent-world* precedent than Eliza — needs a world layer above |
 
 ## L3 — cognition / memory / autotelic motivation
 
@@ -44,6 +45,44 @@ carry biases (reward/optimization) we must **not** adopt given autotelic-not-rew
 | **Letta/MemGPT · Mem0** | tiered memory (core/recall/archival), auto promote/compress | **memory infrastructure off the shelf** | memory layer only; no drive/identity |
 | **autotelic line** (Colas; **MAGELLAN** ICML'25; "Beyond Utility" NeurIPS'25) | agents self-generate NL goals; MAGELLAN uses **learning-progress (LP)** to guide goal choice | goal-generation machinery = the selector's theoretical core | **LP is an intrinsic reward → still optimizing**; borrow the mechanism, **drop the optimization objective** |
 | **needs / personality / artificial life** (**Sophia** 2512.18202; "personality from **needs alone**"; evolving_personality; SPeCtrum) | personality/behavior **emerging from basic needs**; persistent identity | closest to the identity+needs engine | social-emergence framing; known **persona drift** + convergence to "average persona" |
+| **GenerativeAgentsCN** (x-glacier, MIT, 463⭐) | Smallville Chinese reimplementation; **verified Ollama + Qwen3-4B / DeepSeek-R1 running 25 agents** locally | **concrete local-LLM cost evidence** for an N≥25 multi-agent run + a ready zh scaffold; fork-and-run start for multi-agent emergence work | still Smallville-shaped (schedules/goals) — same optimization framing as Park 2023 |
+| **AgentVerse — `simulation` track** (OpenBMB/Tsinghua, arxiv 2308.10848) | LLM multi-agent framework split into `task-solving` + `simulation`; Minecraft branch studies emergent multi-agent behavior | third multi-agent-emergence reference besides Smallville/PIANO; cleaner sim/task separation than ElizaOS | not autotelic — sim runs still framed by task success |
+| **EconAgent** (Tsinghua, ACL'24 Outstanding) | 100 LLM agents × 20 simulated years; macro-economic sim that **reproduces stylized economic facts** | strongest existing evidence that a **long-horizon multi-LLM sim can stay coherent** — supports the "non-optimal believable long-horizon" feasibility | optimization-shaped objective (macro outcomes) → borrow the coherence-evidence, not the objective |
+
+## Chinese-community supplement (added 2026-06-06)
+
+Section added after the original note converged. Covers Chinese-ecosystem
+items that sit alongside the L2/L3 tables — role-LLM model layer, RP corpora,
+and MUD assets — plus a relevant consumer-product observation. The new L2/L3
+rows above (AgentScope, GenerativeAgentsCN, AgentVerse-sim, EconAgent) belong
+in their tables; this subsection is for the items that don't.
+
+- **CharacterGLM-6B** (THU CoAI + Lingxin AI, EMNLP'24, open 6B) — Chinese
+  role-customised dialogue **pre-trained** model with a six-dimension subjective
+  evaluator. Candidate **NPC local model** when role-fidelity matters more than
+  general capability; slots beneath the L3 table as a model-layer choice.
+- **Chinese RP / role-eval corpora**: ChatHaruhi (54k dialogues, 32 zh+en
+  characters, MIT) · CharacterEval (1785 multi-turn dialogues, 77 zh
+  novel/drama characters) · RoleBench · SuperCLUE-Role. Collectively the
+  largest open Chinese role-fidelity dataset stack. Reusable as (a) NPC
+  persona-fidelity evaluator, (b) drive-layer believability evaluator,
+  (c) RAG corpus for character knowledge.
+- **Wuxia-MUD lib assets** (pkuxkx.net wiki + `mudcore` / `xwjy_mud/mudcore`):
+  30 years of LPMud-based Chinese MUD content — characters / sects / techniques
+  / geography / NPC dialogue — usable as RAG corpus *if* a Chinese-setting
+  substrate is chosen. Setting choice is left to [[substrate-evennia-multi-agent]];
+  the asset's existence is the relevant prior-art fact.
+- **AI-companion product observation** (informative, not adoptable): closed-
+  source Chinese RP apps — 筑梦岛 (Yuewen/Tencent), 猫箱 (ByteDance), 星野
+  (MiniMax), Tavo — all ship "multi-AI characters in one shared scene" features.
+  **Multi-agent co-presence has consumer-product validation in the zh market**
+  that the en market lacks — a weak signal that the operator-in-multi-agent-world
+  UX is not unprecedented (relevant to [[substrate-evennia-multi-agent]]).
+- **One MUD × LLM lead** — `mud.ren/threads/436` describes a project called
+  "Yanhuang MUD" (炎黄 MUD) running `npc_manager.py` for LLM NPCs with memory +
+  knowledge-base retrieval. No GitHub repo surfaced; appears to be single-NPC,
+  not multi-agent. The **only public Chinese MUD + LLM signal found**; worth
+  contacting the thread author if multi-agent MUD work proceeds.
 
 ## Two tensions
 
@@ -65,6 +104,9 @@ carry biases (reward/optimization) we must **not** adopt given autotelic-not-rew
   loop + memory + world precedent, TS) — *strip the crypto*; **OpenClaw** for
   browser/CDP + the operator async gateway when needed; **Hermes** as the local-first
   fallback brain. Voyager/PIANO are **reference architectures only** (reward bias).
+  **AgentScope** is a newly surfaced multi-agent-comms candidate (`msghub` + Werewolf
+  template); merits a spike comparison vs ElizaOS-core *only if* the multi-agent
+  substrate option in [[substrate-evennia-multi-agent]] is pursued.
 - **L3 (self-build — it's the IP — but stand on giants):** reuse **Generative Agents**
   memory+reflection + **Letta/Mem0** for storage; take goal-generation from
   **Colas/MAGELLAN** but **cut the learning-progress reward**; take identity+needs
@@ -86,8 +128,14 @@ carry biases (reward/optimization) we must **not** adopt given autotelic-not-rew
 - Commit the L2 runtime choice → a `harness runtime` ADR (resolves the ROADMAP gate).
 - T4 will likely spawn its own exploration (selector design without an optimization
   objective; memory/identity stack choice).
+- **Multi-agent substrate spike** (gated by [[substrate-evennia-multi-agent]]): fork
+  `GenerativeAgentsCN`, measure token/tick at N=25 with Qwen3-4B on operator's local
+  hardware; only then is AgentScope-vs-ElizaOS-core comparison decisive.
+- Contact `mud.ren/threads/436` author re: "Yanhuang MUD" — the single public
+  zh MUD × LLM lead; cheap, may yield code or design insight.
 
 ## Sources
 
-- L2: [ElizaOS](https://www.elizaos.ai/) · [ElizaOS/OpenClaw/Hermes compared](https://innfactory.ai/en/blog/openclaw-vs-hermes-agent-comparison/) · [OpenClaw browser harness](https://openclawlaunch.com/guides/openclaw-browser-harness) · [Hermes Agent](https://github.com/nousresearch/hermes-agent) · [Voyager](https://voyager.minedojo.org/) · [ODYSSEY](https://openreview.net/pdf?id=vtGLtSxtqv) · [MindForge](https://arxiv.org/pdf/2411.12977) · [Project Sid / PIANO](https://arxiv.org/abs/2411.00114)
-- L3: [Generative Agents](https://arxiv.org/pdf/2304.03442) · [Letta/MemGPT vs Mem0](https://vectorize.io/articles/mem0-vs-letta) · [Augmenting Autotelic Agents w/ LLMs (Colas)](https://proceedings.mlr.press/v232/colas23a/colas23a.pdf) · [Colas publications (MAGELLAN)](https://cedriccolas.com/publications/) · [LLM Agents Beyond Utility](https://arxiv.org/abs/2510.14548) · [Sophia: Persistent Agent Framework for Artificial Life](https://arxiv.org/pdf/2512.18202) · [Personality from needs alone](https://www.eurekalert.org/news-releases/1099709) · [SPeCtrum identity](https://arxiv.org/pdf/2502.08599)
+- L2: [ElizaOS](https://www.elizaos.ai/) · [ElizaOS/OpenClaw/Hermes compared](https://innfactory.ai/en/blog/openclaw-vs-hermes-agent-comparison/) · [OpenClaw browser harness](https://openclawlaunch.com/guides/openclaw-browser-harness) · [Hermes Agent](https://github.com/nousresearch/hermes-agent) · [Voyager](https://voyager.minedojo.org/) · [ODYSSEY](https://openreview.net/pdf?id=vtGLtSxtqv) · [MindForge](https://arxiv.org/pdf/2411.12977) · [Project Sid / PIANO](https://arxiv.org/abs/2411.00114) · [AgentScope](https://github.com/modelscope/agentscope)
+- L3: [Generative Agents](https://arxiv.org/pdf/2304.03442) · [Letta/MemGPT vs Mem0](https://vectorize.io/articles/mem0-vs-letta) · [Augmenting Autotelic Agents w/ LLMs (Colas)](https://proceedings.mlr.press/v232/colas23a/colas23a.pdf) · [Colas publications (MAGELLAN)](https://cedriccolas.com/publications/) · [LLM Agents Beyond Utility](https://arxiv.org/abs/2510.14548) · [Sophia: Persistent Agent Framework for Artificial Life](https://arxiv.org/pdf/2512.18202) · [Personality from needs alone](https://www.eurekalert.org/news-releases/1099709) · [SPeCtrum identity](https://arxiv.org/pdf/2502.08599) · [GenerativeAgentsCN](https://github.com/x-glacier/GenerativeAgentsCN) · [AgentVerse](https://github.com/OpenBMB/AgentVerse) (paper: [arxiv 2308.10848](https://arxiv.org/abs/2308.10848)) · [EconAgent (ACL'24)](https://aclanthology.org/2024.acl-long.829/)
+- Chinese-community supplement: [CharacterGLM-6B](https://github.com/thu-coai/CharacterGLM-6B) · [Chat-Haruhi-Suzumiya](https://github.com/LC1332/Chat-Haruhi-Suzumiya) · [CharacterEval](https://arxiv.org/abs/2401.01275) · [RoleBench / RoleLLM](https://github.com/InteractiveNLP-Team/RoleLLM-public) · [SuperCLUE-Role](https://github.com/CLUEbenchmark/SuperCLUE-Role) · [pkuxkx wiki](https://www.pkuxkx.net/wiki) · [mudcore](https://gitee.com/mudcore/mudcore) · [mudchina站点列表](https://mudchina.github.io/) · [mud.ren/threads/436 — 炎黄 MUD](https://mud.ren/threads/436) · [筑梦岛](https://zhumengdao.com/) · [猫箱 (ByteDance)](https://www.maoxiang.com/)
