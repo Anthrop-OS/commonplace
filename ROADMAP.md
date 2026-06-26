@@ -17,7 +17,7 @@ decisions still ahead, and a dated snapshot of where we are.
 | Layer | Is | Milestone 0 choice | Reference |
 |---|---|---|---|
 | **L1** substrate | the world itself | **Melvor = P0** (clean-room); **Stardew Valley = P1+** (dual-control); others deferred | `adr-0003-*`, `adr-0007` substrate ladder |
-| **L2** harness + bridge | executor + perception↔action seam | **TypeScript**; runtime (OpenClaw / ElizaOS / Hermes) **unchosen** | `harness/README.md`, `harness/bridge/README.md`, `decisions/adr-0006-*` |
+| **L2** harness + bridge | executor + perception↔action seam | **TypeScript**; runtime = **self-built thin run-loop**, no framework | `harness/README.md`, `harness/bridge/README.md`, `decisions/adr-0006-*`, `decisions/adr-pending-a36d1d8e-*` |
 | **L3** cognition | autotelic drives (core IP) | **Python** | `drives/README.md`, `decisions/adr-0004-*`, `adr-0006-*` |
 
 ## Milestone 0 — clean-room, end-to-end
@@ -83,7 +83,7 @@ Each downstream task carries its own small decision-gate. None block T1.
 
 | Open decision | Surfaces in | Status |
 |---|---|---|
-| harness **runtime**: OpenClaw vs ElizaOS vs Hermes | T2 / T5 | unchosen; **lean = ElizaOS-core + OpenClaw-gateway + Hermes-fallback** per `exploration/prior-art-l2-l3.md` |
+| harness **runtime** | T2 / T5 | **resolved → adr-pending-a36d1d8e**: self-built thin run-loop over the Bridge; all frameworks rejected (third-party audit). Supersedes the old ElizaOS/OpenClaw/Hermes lean. |
 | **IPC transport** TS↔Python (how JSON crosses the seam) | T5 | explicitly deferred by ADR-0006 |
 | Melvor **act path**: mod API vs CDP / headless-Chromium | T2 | `TASKS.md` requires choose-and-justify |
 | **salient push** channel: ntfy vs Discord | T3 | **converging → MVP: AstrBot over Discord, two-way** (transport-not-brain; `discord.py` fallback). See `exploration/gateway-selection.md` |
