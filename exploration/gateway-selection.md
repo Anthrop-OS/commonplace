@@ -2,15 +2,21 @@
 topic: gateway-selection
 status: converging
 date: 2026-06-03
-related-adrs: [adr-0006]
-resolves-to:
+related-adrs: [adr-0005, adr-0006]
+resolves-to: adr-pending-37140cf6-gateway-matrix-mautrix-go
 ---
 
 # Gateway selection — the operator↔agent async channel
 
-> Status: **converging**. MVP comms tool = **AstrBot** over Discord, two-way
-> (operator direction), used transport-not-brain. One open spike: the L3
-> integration path. Resolves into an ADR.
+> Status: **resolved** → [[adr-pending-37140cf6-gateway-matrix-mautrix-go]]
+> (operator, 2026-06-25): **Matrix (continuwuity, federation-off, plaintext) +
+> mautrix-go** as a separate thin Go gateway process. **This supersedes the
+> AstrBot-over-Discord lean below.** A later third-party pass made Discord a soft
+> constraint and added Matrix/XMPP/Signal/Telegram: AstrBot fell on
+> transport-not-brain (self-cognition + AGPL); Telegram/Discord fell on `adr-0005`
+> (bot chats non-E2EE, plaintext on third-party cloud); XMPP+slixmpp is the kept
+> runner-up. The analysis below is the original reasoning trail; the decision lives
+> in the ADR.
 
 ## Question
 

@@ -86,7 +86,7 @@ Each downstream task carries its own small decision-gate. None block T1.
 | harness **runtime**: OpenClaw vs ElizaOS vs Hermes | T2 / T5 | unchosen; **lean = ElizaOS-core + OpenClaw-gateway + Hermes-fallback** per `exploration/prior-art-l2-l3.md` |
 | **IPC transport** TS↔Python (how JSON crosses the seam) | T5 | explicitly deferred by ADR-0006 |
 | Melvor **act path**: mod API vs CDP / headless-Chromium | T2 | `TASKS.md` requires choose-and-justify |
-| **salient push** channel: ntfy vs Discord | T3 | **converging → MVP: AstrBot over Discord, two-way** (transport-not-brain; `discord.py` fallback). See `exploration/gateway-selection.md` |
+| **gateway / salient push** channel | T3 | **resolved → adr-pending-37140cf6**: Matrix (continuwuity, fed-off, plaintext) + mautrix-go thin Go gateway. Supersedes the AstrBot/Discord lean (Telegram/Discord fail adr-0005; AstrBot fails transport-not-brain). XMPP+slixmpp = kept fallback. |
 
 ## Open explorations (pre-decision)
 
@@ -95,7 +95,7 @@ Evaluations still in motion live in `exploration/` and resolve into ADRs.
 | Note | Status | About |
 |---|---|---|
 | `exploration/substrate-selection.md` | **resolved → adr-0007** | substrate ladder: Melvor P0, Stardew P1+ (dual-control staged to P1) |
-| `exploration/gateway-selection.md` | converging | operator↔agent channel; MVP = AstrBot over Discord, two-way (transport-not-brain; `discord.py` fallback) |
+| `exploration/gateway-selection.md` | **resolved → adr-pending-37140cf6** | operator↔agent channel = Matrix (continuwuity) + mautrix-go thin Go gateway; Discord soft-constraint, Telegram/Discord out on adr-0005, XMPP kept fallback |
 | `exploration/prior-art-l2-l3.md` | converging | L2 runtimes + L3 cognition survey; feeds T2 (runtime) and T4 (drive design): reuse-vs-refuse, drop the optimization objective |
 
 ## Governance / ops track (parallel to the product)
