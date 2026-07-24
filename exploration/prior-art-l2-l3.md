@@ -3,15 +3,17 @@ topic: prior-art-l2-l3
 status: converging
 date: 2026-06-03
 related-adrs: [adr-0004, adr-0006]
-resolves-to:
+resolves-to: adr-pending-a36d1d8e-l2-harness-runtime
 ---
 
 # Prior art — L2 runtimes & L3 cognition (what to build on, what to refuse)
 
-> Status: **converging**. A survey of current (2026) community/research work for
-> the harness runtime (L2) and the cognition layer (L3), mapped to our needs.
-> Feeds T2 (runtime choice) and T4 (drive-layer design). Resolves into ADRs when
-> those are committed.
+> Status: **L2 runtime portion resolved** → [[adr-pending-a36d1d8e-l2-harness-runtime]]
+> (operator, 2026-06-25): **self-built thin run-loop, all frameworks rejected** (the ADR
+> carries the full rejected-alternatives audit, broadened beyond this note via third-party
+> sourcing). The **L3 cognition** survey below remains **input to T4** (drive-layer design)
+> — still open. Original survey of 2026 community/research work for the harness runtime
+> (L2) and the cognition layer (L3), mapped to our needs.
 
 ## Question
 
