@@ -1,0 +1,42 @@
+name: logbook-ci
+
+# Automated acceptance for the Python logbook pipeline (the record layer's
+# writer/reader): schema validation, tier routing, the redaction gate, and the
+# transport-not-brain salient push. Round-trips the synthetic sample and asserts
+# the pipeline creates NO real entries in the repo (AGENTS.md rule 2 / ADR-0005).
+#
+# Runs on EVERY pull request as a signal (no paths filter). Like harness-ci it is
+# NOT a hard ruleset-required check — cc waits for green before self-merging, and
+# CI checks are signals not gates here (adr-0001, matching homelab-ops). pip is
+# cached; the only dependency is PyYAML.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: logbook-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  logbook-ci:
+    name: logbook-ci
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: logbook/pipeline
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: logbook/pipeline/pyproject.toml
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
+      - name: test + coverage gate (100% pipeline surface)
+        run: pytest --cov --cov-report=term-missing
